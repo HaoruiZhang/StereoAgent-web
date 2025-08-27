@@ -17,6 +17,7 @@ import LogoutCircleRLine from "~icons/ri/logout-circle-r-line";
 import Setting from "~icons/ri/settings-3-line";
 import Check from "~icons/ep/check";
 
+const ifDevMode = import.meta.env.VITE_ENV_MODE === "fulldev";
 const menuRef = ref();
 const showLogo = ref(
   storageLocal().getItem<StorageConfigs>(
@@ -64,24 +65,26 @@ onMounted(() => {
       <img :src="getLogo()" alt="logo" />
       <span>{{ title }}</span>
     </div>
-    <!--
+
     <el-menu
+      v-if="ifDevMode"
       ref="menuRef"
       mode="horizontal"
       popper-class="pure-scrollbar"
       class="horizontal-header-menu"
       :default-active="defaultActive"
     >
-       <LaySidebarItem
+      <LaySidebarItem
         v-for="route in usePermissionStoreHook().wholeMenus"
         :key="route.path"
         :item="route"
         :base-path="route.path"
       />
-    </el-menu>-->
+    </el-menu>
+    <ul v-else class="el-menu el-menu--horizontal horizontal-header-menu" />
     <div class="horizontal-header-right">
       <!-- 菜单搜索 -->
-      <LaySearch id="header-search" />
+      <LaySearch v-if="ifDevMode" id="header-search" />
       <!-- 国际化 -->
       <el-dropdown id="header-translation" trigger="click">
         <GlobalizationIcon
@@ -115,7 +118,7 @@ onMounted(() => {
       <!-- 全屏 -->
       <LaySidebarFullScreen id="full-screen" />
       <!-- 消息通知 -->
-      <LayNotice id="header-notice" />
+      <LayNotice v-if="ifDevMode" id="header-notice" />
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
         <span class="el-dropdown-link navbar-bg-hover">

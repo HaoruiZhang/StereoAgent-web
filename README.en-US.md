@@ -50,23 +50,23 @@ The simplified version is based on the shelf extracted from [vue-pure-admin](htt
 `PC`
 
 <p align="center">
-  <img alt="PureAdmin" src="https://xiaoxian521.github.io/hyperlink/img/vue-pure-admin/1.jpg">
+  <img alt="StereoAgent" src="https://xiaoxian521.github.io/hyperlink/img/vue-pure-admin/1.jpg">
   <br />
-  <img alt="PureAdmin" src="https://xiaoxian521.github.io/hyperlink/img/vue-pure-admin/2.jpg">
+  <img alt="StereoAgent" src="https://xiaoxian521.github.io/hyperlink/img/vue-pure-admin/2.jpg">
 </p>
 
 `DarkMode`
 
 <p align="center">
-  <img alt="PureAdmin" src="https://xiaoxian521.github.io/hyperlink/img/vue-pure-admin/3.jpg">
+  <img alt="StereoAgent" src="https://xiaoxian521.github.io/hyperlink/img/vue-pure-admin/3.jpg">
   <br />
-  <img alt="PureAdmin" src="https://xiaoxian521.github.io/hyperlink/img/vue-pure-admin/4.jpg">
+  <img alt="StereoAgent" src="https://xiaoxian521.github.io/hyperlink/img/vue-pure-admin/4.jpg">
 </p>
 
 `Mobile`
 
 <p align="center">
-  <img alt="PureAdmin" src="https://xiaoxian521.github.io/hyperlink/img/vue-pure-admin/5.jpg">
+  <img alt="StereoAgent" src="https://xiaoxian521.github.io/hyperlink/img/vue-pure-admin/5.jpg">
 </p>
 
 ### Use Gitpod

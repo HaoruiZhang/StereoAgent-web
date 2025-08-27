@@ -30,6 +30,7 @@ const { t } = useI18n();
 const { device } = useNav();
 const { isDark } = useDark();
 const { $storage } = useGlobal<GlobalPropertiesApi>();
+const ifDevMode = import.meta.env.VITE_ENV_MODE === "fulldev";
 
 const mixRef = ref();
 const verticalRef = ref();
@@ -353,9 +354,11 @@ onUnmounted(() => removeMatchMedia);
           </el-icon>
         </li>
       </ul>
-      <!--
-      <p :class="['mt-5!', pClass]">{{ t("panel.pureLayoutModel") }}</p>
-      <ul class="pure-theme">
+
+      <p v-if="ifDevMode" :class="['mt-5!', pClass]">
+        {{ t("panel.pureLayoutModel") }}
+      </p>
+      <ul v-if="ifDevMode" class="pure-theme">
         <li
           ref="verticalRef"
           v-tippy="{
@@ -395,7 +398,6 @@ onUnmounted(() => removeMatchMedia);
           <div />
         </li>
       </ul>
-      -->
 
       <span v-if="useAppStoreHook().getViewportWidth > 1280">
         <p :class="['mt-5!', pClass]">{{ t("panel.pureStretch") }}</p>
@@ -472,7 +474,7 @@ onUnmounted(() => removeMatchMedia);
             @change="weekChange"
           />
         </li>
-        <li>
+        <li v-if="ifDevMode">
           <span class="dark:text-white">{{ t("panel.pureHiddenTags") }}</span>
           <el-switch
             v-model="settings.tabsVal"
@@ -492,7 +494,7 @@ onUnmounted(() => removeMatchMedia);
             @change="hideFooterChange"
           />
         </li>
-        <li>
+        <li v-if="ifDevMode">
           <span class="dark:text-white">Logo</span>
           <el-switch
             v-model="logoVal"
