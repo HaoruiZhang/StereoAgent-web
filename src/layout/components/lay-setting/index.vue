@@ -353,7 +353,7 @@ onUnmounted(() => removeMatchMedia);
           </el-icon>
         </li>
       </ul>
-
+      <!--
       <p :class="['mt-5!', pClass]">{{ t("panel.pureLayoutModel") }}</p>
       <ul class="pure-theme">
         <li
@@ -395,6 +395,7 @@ onUnmounted(() => removeMatchMedia);
           <div />
         </li>
       </ul>
+      -->
 
       <span v-if="useAppStoreHook().getViewportWidth > 1280">
         <p :class="['mt-5!', pClass]">{{ t("panel.pureStretch") }}</p>

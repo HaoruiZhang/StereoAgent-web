@@ -64,6 +64,7 @@ onMounted(() => {
       <img :src="getLogo()" alt="logo" />
       <span>{{ title }}</span>
     </div>
+    <!--
     <el-menu
       ref="menuRef"
       mode="horizontal"
@@ -71,13 +72,13 @@ onMounted(() => {
       class="horizontal-header-menu"
       :default-active="defaultActive"
     >
-      <!-- <LaySidebarItem
+       <LaySidebarItem
         v-for="route in usePermissionStoreHook().wholeMenus"
         :key="route.path"
         :item="route"
         :base-path="route.path"
-      /> -->
-    </el-menu>
+      />
+    </el-menu>-->
     <div class="horizontal-header-right">
       <!-- 菜单搜索 -->
       <LaySearch id="header-search" />
