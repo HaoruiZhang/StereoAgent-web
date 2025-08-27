@@ -205,5 +205,10 @@
       "@tailwindcss/oxide",
       "vue3-danmaku"
     ]
+  },
+  "lint-staged": {
+    "*.{js,jsx,vue,ts}": [
+      "eslint src"
+    ]
   }
 }
