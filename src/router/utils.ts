@@ -151,6 +151,7 @@ function addPathMatch() {
 
 /** 处理动态路由（后端返回的路由） */
 function handleAsyncRoutes(routeList) {
+  console.log("动态路由", routeList);
   if (routeList.length === 0) {
     usePermissionStoreHook().handleWholeMenus(routeList);
   } else {
@@ -199,12 +200,14 @@ function initRouter() {
     const asyncRouteList = storageLocal().getItem(key) as any;
     if (asyncRouteList && asyncRouteList?.length > 0) {
       return new Promise(resolve => {
+        console.log("获取asyncRouteList路由", asyncRouteList);
         handleAsyncRoutes(asyncRouteList);
         resolve(router);
       });
     } else {
       return new Promise(resolve => {
         getAsyncRoutes().then(({ data }) => {
+          console.log("获取动态路由", data);
           handleAsyncRoutes(cloneDeep(data));
           storageLocal().setItem(key, data);
           resolve(router);
@@ -214,6 +217,7 @@ function initRouter() {
   } else {
     return new Promise(resolve => {
       getAsyncRoutes().then(({ data }) => {
+        console.log("未缓存 获取动态路由", data);
         handleAsyncRoutes(cloneDeep(data));
         resolve(router);
       });

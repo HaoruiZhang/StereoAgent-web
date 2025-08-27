@@ -71,12 +71,12 @@ onMounted(() => {
       class="horizontal-header-menu"
       :default-active="defaultActive"
     >
-      <LaySidebarItem
+      <!-- <LaySidebarItem
         v-for="route in usePermissionStoreHook().wholeMenus"
         :key="route.path"
         :item="route"
         :base-path="route.path"
-      />
+      /> -->
     </el-menu>
     <div class="horizontal-header-right">
       <!-- 菜单搜索 -->

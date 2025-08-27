@@ -13,7 +13,8 @@ const systemManagementRouter = {
   meta: {
     icon: "ri:settings-3-line",
     title: "menus.pureSysManagement",
-    rank: system
+    rank: system,
+    showLink: false
   },
   children: [
     {
@@ -60,7 +61,8 @@ const systemMonitorRouter = {
   meta: {
     icon: "ep:monitor",
     title: "menus.pureSysMonitor",
-    rank: monitor
+    rank: monitor,
+    showLink: false
   },
   children: [
     {
@@ -111,7 +113,8 @@ const permissionRouter = {
   meta: {
     title: "menus.purePermission",
     icon: "ep:lollipop",
-    rank: permission
+    rank: permission,
+    showLink: false
   },
   children: [
     {
@@ -160,7 +163,8 @@ const frameRouter = {
   meta: {
     icon: "ri:links-fill",
     title: "menus.pureExternalPage",
-    rank: frame
+    rank: frame,
+    showLink: false
   },
   children: [
     {
@@ -283,7 +287,8 @@ const tabsRouter = {
   meta: {
     icon: "ri:bookmark-2-line",
     title: "menus.pureTabs",
-    rank: tabs
+    rank: tabs,
+    showLink: false
   },
   children: [
     {
