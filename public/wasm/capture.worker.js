@@ -844,15 +844,16 @@ var Module = typeof Module != "undefined" ? Module : {};
           var target = IS_MAP
             ? create($this, length)
             : IS_FILTER
-            ? create($this, 0)
-            : undefined;
+              ? create($this, 0)
+              : undefined;
           var value, result;
           for (; length > index; index++)
             if (NO_HOLES || index in self) {
               value = self[index];
               result = boundFunction(value, index, O);
               if (TYPE) {
-                if (IS_MAP) target[index] = result; // map
+                if (IS_MAP)
+                  target[index] = result; // map
                 else if (result)
                   switch (TYPE) {
                     case 3:
@@ -1151,18 +1152,19 @@ var Module = typeof Module != "undefined" ? Module : {};
             return it === undefined
               ? "Undefined"
               : it === null
-              ? "Null"
-              : // @@toStringTag case
-              typeof (tag = tryGet((O = Object(it)), TO_STRING_TAG)) == "string"
-              ? tag
-              : // builtinTag case
-              CORRECT_ARGUMENTS
-              ? classofRaw(O)
-              : // ES3 arguments fallback
-              (result = classofRaw(O)) == "Object" &&
-                typeof O.callee == "function"
-              ? "Arguments"
-              : result;
+                ? "Null"
+                : // @@toStringTag case
+                  typeof (tag = tryGet((O = Object(it)), TO_STRING_TAG)) ==
+                    "string"
+                  ? tag
+                  : // builtinTag case
+                    CORRECT_ARGUMENTS
+                    ? classofRaw(O)
+                    : // ES3 arguments fallback
+                      (result = classofRaw(O)) == "Object" &&
+                        typeof O.callee == "function"
+                      ? "Arguments"
+                      : result;
           };
 
       /***/
@@ -2200,10 +2202,10 @@ var Module = typeof Module != "undefined" ? Module : {};
         return value == POLYFILL
           ? true
           : value == NATIVE
-          ? false
-          : typeof detection == "function"
-          ? fails(detection)
-          : !!detection;
+            ? false
+            : typeof detection == "function"
+              ? fails(detection)
+              : !!detection;
       };
 
       var normalize = (isForced.normalize = function (string) {
@@ -3189,7 +3191,7 @@ var Module = typeof Module != "undefined" ? Module : {};
       })("versions", []).push({
         version: "3.6.5",
         mode: IS_PURE ? "pure" : "global",
-        copyright: "© 2020 Denis Pushkarev (zloirock.ru)"
+        copyright: "© 2025 Denis Pushkarev (zloirock.ru)"
       });
 
       /***/
@@ -3691,8 +3693,8 @@ var Module = typeof Module != "undefined" ? Module : {};
                 (value = round(value)) < 0
                   ? 0
                   : value > 0xff
-                  ? 0xff
-                  : value & 0xff;
+                    ? 0xff
+                    : value & 0xff;
             data.view[SETTER](index * BYTES + data.byteOffset, value, true);
           };
 
@@ -3709,86 +3711,80 @@ var Module = typeof Module != "undefined" ? Module : {};
           };
 
           if (!NATIVE_ARRAY_BUFFER_VIEWS) {
-            TypedArrayConstructor = wrapper(function (
-              that,
-              data,
-              offset,
-              $length
-            ) {
-              anInstance(that, TypedArrayConstructor, CONSTRUCTOR_NAME);
-              var index = 0;
-              var byteOffset = 0;
-              var buffer, byteLength, length;
-              if (!isObject(data)) {
-                length = toIndex(data);
-                byteLength = length * BYTES;
-                buffer = new ArrayBuffer(byteLength);
-              } else if (isArrayBuffer(data)) {
-                buffer = data;
-                byteOffset = toOffset(offset, BYTES);
-                var $len = data.byteLength;
-                if ($length === undefined) {
-                  if ($len % BYTES) throw RangeError(WRONG_LENGTH);
-                  byteLength = $len - byteOffset;
-                  if (byteLength < 0) throw RangeError(WRONG_LENGTH);
+            TypedArrayConstructor = wrapper(
+              function (that, data, offset, $length) {
+                anInstance(that, TypedArrayConstructor, CONSTRUCTOR_NAME);
+                var index = 0;
+                var byteOffset = 0;
+                var buffer, byteLength, length;
+                if (!isObject(data)) {
+                  length = toIndex(data);
+                  byteLength = length * BYTES;
+                  buffer = new ArrayBuffer(byteLength);
+                } else if (isArrayBuffer(data)) {
+                  buffer = data;
+                  byteOffset = toOffset(offset, BYTES);
+                  var $len = data.byteLength;
+                  if ($length === undefined) {
+                    if ($len % BYTES) throw RangeError(WRONG_LENGTH);
+                    byteLength = $len - byteOffset;
+                    if (byteLength < 0) throw RangeError(WRONG_LENGTH);
+                  } else {
+                    byteLength = toLength($length) * BYTES;
+                    if (byteLength + byteOffset > $len)
+                      throw RangeError(WRONG_LENGTH);
+                  }
+                  length = byteLength / BYTES;
+                } else if (isTypedArray(data)) {
+                  return fromList(TypedArrayConstructor, data);
                 } else {
-                  byteLength = toLength($length) * BYTES;
-                  if (byteLength + byteOffset > $len)
-                    throw RangeError(WRONG_LENGTH);
+                  return typedArrayFrom.call(TypedArrayConstructor, data);
                 }
-                length = byteLength / BYTES;
-              } else if (isTypedArray(data)) {
-                return fromList(TypedArrayConstructor, data);
-              } else {
-                return typedArrayFrom.call(TypedArrayConstructor, data);
+                setInternalState(that, {
+                  buffer: buffer,
+                  byteOffset: byteOffset,
+                  byteLength: byteLength,
+                  length: length,
+                  view: new DataView(buffer)
+                });
+                while (index < length) addElement(that, index++);
               }
-              setInternalState(that, {
-                buffer: buffer,
-                byteOffset: byteOffset,
-                byteLength: byteLength,
-                length: length,
-                view: new DataView(buffer)
-              });
-              while (index < length) addElement(that, index++);
-            });
+            );
 
             if (setPrototypeOf)
               setPrototypeOf(TypedArrayConstructor, TypedArray);
             TypedArrayConstructorPrototype = TypedArrayConstructor.prototype =
               create(TypedArrayPrototype);
           } else if (TYPED_ARRAYS_CONSTRUCTORS_REQUIRES_WRAPPERS) {
-            TypedArrayConstructor = wrapper(function (
-              dummy,
-              data,
-              typedArrayOffset,
-              $length
-            ) {
-              anInstance(dummy, TypedArrayConstructor, CONSTRUCTOR_NAME);
-              return inheritIfRequired(
-                (function () {
-                  if (!isObject(data))
-                    return new NativeTypedArrayConstructor(toIndex(data));
-                  if (isArrayBuffer(data))
-                    return $length !== undefined
-                      ? new NativeTypedArrayConstructor(
-                          data,
-                          toOffset(typedArrayOffset, BYTES),
-                          $length
-                        )
-                      : typedArrayOffset !== undefined
-                      ? new NativeTypedArrayConstructor(
-                          data,
-                          toOffset(typedArrayOffset, BYTES)
-                        )
-                      : new NativeTypedArrayConstructor(data);
-                  if (isTypedArray(data))
-                    return fromList(TypedArrayConstructor, data);
-                  return typedArrayFrom.call(TypedArrayConstructor, data);
-                })(),
-                dummy,
-                TypedArrayConstructor
-              );
-            });
+            TypedArrayConstructor = wrapper(
+              function (dummy, data, typedArrayOffset, $length) {
+                anInstance(dummy, TypedArrayConstructor, CONSTRUCTOR_NAME);
+                return inheritIfRequired(
+                  (function () {
+                    if (!isObject(data))
+                      return new NativeTypedArrayConstructor(toIndex(data));
+                    if (isArrayBuffer(data))
+                      return $length !== undefined
+                        ? new NativeTypedArrayConstructor(
+                            data,
+                            toOffset(typedArrayOffset, BYTES),
+                            $length
+                          )
+                        : typedArrayOffset !== undefined
+                          ? new NativeTypedArrayConstructor(
+                              data,
+                              toOffset(typedArrayOffset, BYTES)
+                            )
+                          : new NativeTypedArrayConstructor(data);
+                    if (isTypedArray(data))
+                      return fromList(TypedArrayConstructor, data);
+                    return typedArrayFrom.call(TypedArrayConstructor, data);
+                  })(),
+                  dummy,
+                  TypedArrayConstructor
+                );
+              }
+            );
 
             if (setPrototypeOf)
               setPrototypeOf(TypedArrayConstructor, TypedArray);
@@ -4825,9 +4821,9 @@ var Module = typeof Module != "undefined" ? Module : {};
             this instanceof SymbolWrapper
               ? new NativeSymbol(description)
               : // in Edge 13, String(Symbol(undefined)) === 'Symbol(undefined)'
-              description === undefined
-              ? NativeSymbol()
-              : NativeSymbol(description);
+                description === undefined
+                ? NativeSymbol()
+                : NativeSymbol(description);
           if (description === "") EmptyStringDescriptionStore[result] = true;
           return result;
         };
@@ -5466,7 +5462,7 @@ var Module = typeof Module != "undefined" ? Module : {};
                 )
               : PromiseImpl.resolve(value).then(
                   function (unwrapped) {
-                    (result.value = unwrapped), resolve(result);
+                    ((result.value = unwrapped), resolve(result));
                   },
                   function (error) {
                     return invoke("throw", error, resolve, reject);
@@ -5548,10 +5544,10 @@ var Module = typeof Module != "undefined" ? Module : {};
               "throw" === context.method)
             )
               return ContinueSentinel;
-            (context.method = "throw"),
+            ((context.method = "throw"),
               (context.arg = new TypeError(
                 "The iterator does not provide a 'throw' method"
-              ));
+              )));
           }
           return ContinueSentinel;
         }
@@ -5580,21 +5576,21 @@ var Module = typeof Module != "undefined" ? Module : {};
       }
       function pushTryEntry(locs) {
         var entry = { tryLoc: locs[0] };
-        1 in locs && (entry.catchLoc = locs[1]),
+        (1 in locs && (entry.catchLoc = locs[1]),
           2 in locs &&
             ((entry.finallyLoc = locs[2]), (entry.afterLoc = locs[3])),
-          this.tryEntries.push(entry);
+          this.tryEntries.push(entry));
       }
       function resetTryEntry(entry) {
         var record = entry.completion || {};
-        (record.type = "normal"),
+        ((record.type = "normal"),
           delete record.arg,
-          (entry.completion = record);
+          (entry.completion = record));
       }
       function Context(tryLocsList) {
-        (this.tryEntries = [{ tryLoc: "root" }]),
+        ((this.tryEntries = [{ tryLoc: "root" }]),
           tryLocsList.forEach(pushTryEntry, this),
-          this.reset(!0);
+          this.reset(!0));
       }
       function values(iterable) {
         if (iterable) {
@@ -5606,8 +5602,8 @@ var Module = typeof Module != "undefined" ? Module : {};
               next = function next() {
                 for (; ++i < iterable.length; )
                   if (hasOwn.call(iterable, i))
-                    return (next.value = iterable[i]), (next.done = !1), next;
-                return (next.value = undefined), (next.done = !0), next;
+                    return ((next.value = iterable[i]), (next.done = !1), next);
+                return ((next.value = undefined), (next.done = !0), next);
               };
             return (next.next = next);
           }
@@ -5694,9 +5690,9 @@ var Module = typeof Module != "undefined" ? Module : {};
               for (; keys.length; ) {
                 var key = keys.pop();
                 if (key in object)
-                  return (next.value = key), (next.done = !1), next;
+                  return ((next.value = key), (next.done = !1), next);
               }
-              return (next.done = !0), next;
+              return ((next.done = !0), next);
             }
           );
         }),
@@ -5798,12 +5794,12 @@ var Module = typeof Module != "undefined" ? Module : {};
               "break" === record.type || "continue" === record.type
                 ? (this.next = record.arg)
                 : "return" === record.type
-                ? ((this.rval = this.arg = record.arg),
-                  (this.method = "return"),
-                  (this.next = "end"))
-                : "normal" === record.type &&
-                  afterLoc &&
-                  (this.next = afterLoc),
+                  ? ((this.rval = this.arg = record.arg),
+                    (this.method = "return"),
+                    (this.next = "end"))
+                  : "normal" === record.type &&
+                    afterLoc &&
+                    (this.next = afterLoc),
               ContinueSentinel
             );
           },
@@ -5897,11 +5893,11 @@ var Module = typeof Module != "undefined" ? Module : {};
       var keys = Object.keys(object);
       if (Object.getOwnPropertySymbols) {
         var symbols = Object.getOwnPropertySymbols(object);
-        enumerableOnly &&
+        (enumerableOnly &&
           (symbols = symbols.filter(function (sym) {
             return Object.getOwnPropertyDescriptor(object, sym).enumerable;
           })),
-          keys.push.apply(keys, symbols);
+          keys.push.apply(keys, symbols));
       }
       return keys;
     }
@@ -5913,17 +5909,17 @@ var Module = typeof Module != "undefined" ? Module : {};
               _defineProperty(target, key, source[key]);
             })
           : Object.getOwnPropertyDescriptors
-          ? Object.defineProperties(
-              target,
-              Object.getOwnPropertyDescriptors(source)
-            )
-          : ownKeys(Object(source)).forEach(function (key) {
-              Object.defineProperty(
+            ? Object.defineProperties(
                 target,
-                key,
-                Object.getOwnPropertyDescriptor(source, key)
-              );
-            });
+                Object.getOwnPropertyDescriptors(source)
+              )
+            : ownKeys(Object(source)).forEach(function (key) {
+                Object.defineProperty(
+                  target,
+                  key,
+                  Object.getOwnPropertyDescriptor(source, key)
+                );
+              });
       }
       return target;
     }
@@ -6176,32 +6172,31 @@ var Module = typeof Module != "undefined" ? Module : {};
     self.Module = {
       instantiateWasm: (function () {
         var _instantiateWasm = _asyncToGenerator(
-          /*#__PURE__*/ _regeneratorRuntime().mark(function _callee(
-            info,
-            receiveInstance
-          ) {
-            var url;
-            return _regeneratorRuntime().wrap(function _callee$(_context) {
-              while (1)
-                switch ((_context.prev = _context.next)) {
-                  case 0:
-                    _context.next = 2;
-                    return initPromise;
-                  case 2:
-                    url = _context.sent;
-                    fetch(url || "./capture.worker.wasm")
-                      .then(response => response.arrayBuffer())
-                      .then(bytes => WebAssembly.instantiate(bytes, info))
-                      .then(instance => receiveInstance(instance.instance));
-                  // WebAssembly.instantiate(bytes, info).then(result => {
-                  //     receiveInstance(result.instance);
-                  // });
-                  case 4:
-                  case "end":
-                    return _context.stop();
-                }
-            }, _callee);
-          })
+          /*#__PURE__*/ _regeneratorRuntime().mark(
+            function _callee(info, receiveInstance) {
+              var url;
+              return _regeneratorRuntime().wrap(function _callee$(_context) {
+                while (1)
+                  switch ((_context.prev = _context.next)) {
+                    case 0:
+                      _context.next = 2;
+                      return initPromise;
+                    case 2:
+                      url = _context.sent;
+                      fetch(url || "./capture.worker.wasm")
+                        .then(response => response.arrayBuffer())
+                        .then(bytes => WebAssembly.instantiate(bytes, info))
+                        .then(instance => receiveInstance(instance.instance));
+                    // WebAssembly.instantiate(bytes, info).then(result => {
+                    //     receiveInstance(result.instance);
+                    // });
+                    case 4:
+                    case "end":
+                      return _context.stop();
+                  }
+              }, _callee);
+            }
+          )
         );
         function instantiateWasm(_x, _x2) {
           return _instantiateWasm.apply(this, arguments);
@@ -9774,7 +9769,7 @@ var SYSCALLS = {
     HEAP32[(buf + 12) >> 2] = stat.uid;
     HEAP32[(buf + 16) >> 2] = stat.gid;
     HEAP32[(buf + 20) >> 2] = stat.rdev;
-    (tempI64 = [
+    ((tempI64 = [
       stat.size >>> 0,
       ((tempDouble = stat.size),
       +Math.abs(tempDouble) >= 1.0
@@ -9786,13 +9781,13 @@ var SYSCALLS = {
         : 0)
     ]),
       (HEAP32[(buf + 24) >> 2] = tempI64[0]),
-      (HEAP32[(buf + 28) >> 2] = tempI64[1]);
+      (HEAP32[(buf + 28) >> 2] = tempI64[1]));
     HEAP32[(buf + 32) >> 2] = 4096;
     HEAP32[(buf + 36) >> 2] = stat.blocks;
     var atime = stat.atime.getTime();
     var mtime = stat.mtime.getTime();
     var ctime = stat.ctime.getTime();
-    (tempI64 = [
+    ((tempI64 = [
       Math.floor(atime / 1000) >>> 0,
       ((tempDouble = Math.floor(atime / 1000)),
       +Math.abs(tempDouble) >= 1.0
@@ -9804,9 +9799,9 @@ var SYSCALLS = {
         : 0)
     ]),
       (HEAP32[(buf + 40) >> 2] = tempI64[0]),
-      (HEAP32[(buf + 44) >> 2] = tempI64[1]);
+      (HEAP32[(buf + 44) >> 2] = tempI64[1]));
     HEAPU32[(buf + 48) >> 2] = (atime % 1000) * 1000;
-    (tempI64 = [
+    ((tempI64 = [
       Math.floor(mtime / 1000) >>> 0,
       ((tempDouble = Math.floor(mtime / 1000)),
       +Math.abs(tempDouble) >= 1.0
@@ -9818,9 +9813,9 @@ var SYSCALLS = {
         : 0)
     ]),
       (HEAP32[(buf + 56) >> 2] = tempI64[0]),
-      (HEAP32[(buf + 60) >> 2] = tempI64[1]);
+      (HEAP32[(buf + 60) >> 2] = tempI64[1]));
     HEAPU32[(buf + 64) >> 2] = (mtime % 1000) * 1000;
-    (tempI64 = [
+    ((tempI64 = [
       Math.floor(ctime / 1000) >>> 0,
       ((tempDouble = Math.floor(ctime / 1000)),
       +Math.abs(tempDouble) >= 1.0
@@ -9832,9 +9827,9 @@ var SYSCALLS = {
         : 0)
     ]),
       (HEAP32[(buf + 72) >> 2] = tempI64[0]),
-      (HEAP32[(buf + 76) >> 2] = tempI64[1]);
+      (HEAP32[(buf + 76) >> 2] = tempI64[1]));
     HEAPU32[(buf + 80) >> 2] = (ctime % 1000) * 1000;
-    (tempI64 = [
+    ((tempI64 = [
       stat.ino >>> 0,
       ((tempDouble = stat.ino),
       +Math.abs(tempDouble) >= 1.0
@@ -9846,7 +9841,7 @@ var SYSCALLS = {
         : 0)
     ]),
       (HEAP32[(buf + 88) >> 2] = tempI64[0]),
-      (HEAP32[(buf + 92) >> 2] = tempI64[1]);
+      (HEAP32[(buf + 92) >> 2] = tempI64[1]));
     return 0;
   },
   doMsync: function (addr, stream, len, flags, offset) {
@@ -10008,12 +10003,12 @@ function ___syscall_getdents64(fd, dirp, count) {
         type = FS.isChrdev(child.mode)
           ? 2 // DT_CHR, character device.
           : FS.isDir(child.mode)
-          ? 4 // DT_DIR, directory.
-          : FS.isLink(child.mode)
-          ? 10 // DT_LNK, symbolic link.
-          : 8; // DT_REG, regular file.
+            ? 4 // DT_DIR, directory.
+            : FS.isLink(child.mode)
+              ? 10 // DT_LNK, symbolic link.
+              : 8; // DT_REG, regular file.
       }
-      (tempI64 = [
+      ((tempI64 = [
         id >>> 0,
         ((tempDouble = id),
         +Math.abs(tempDouble) >= 1.0
@@ -10025,8 +10020,8 @@ function ___syscall_getdents64(fd, dirp, count) {
           : 0)
       ]),
         (HEAP32[(dirp + pos) >> 2] = tempI64[0]),
-        (HEAP32[(dirp + pos + 4) >> 2] = tempI64[1]);
-      (tempI64 = [
+        (HEAP32[(dirp + pos + 4) >> 2] = tempI64[1]));
+      ((tempI64 = [
         ((idx + 1) * struct_size) >>> 0,
         ((tempDouble = (idx + 1) * struct_size),
         +Math.abs(tempDouble) >= 1.0
@@ -10038,7 +10033,7 @@ function ___syscall_getdents64(fd, dirp, count) {
           : 0)
       ]),
         (HEAP32[(dirp + pos + 8) >> 2] = tempI64[0]),
-        (HEAP32[(dirp + pos + 12) >> 2] = tempI64[1]);
+        (HEAP32[(dirp + pos + 12) >> 2] = tempI64[1]));
       HEAP16[(dirp + pos + 16) >> 1] = 280;
       HEAP8[(dirp + pos + 18) >> 0] = type;
       stringToUTF8(name, dirp + pos + 19, 256);
@@ -10509,14 +10504,14 @@ function _fd_fdstat_get(fd, pbuf) {
       var type = stream.tty
         ? 2
         : FS.isDir(stream.mode)
-        ? 3
-        : FS.isLink(stream.mode)
-        ? 7
-        : 4;
+          ? 3
+          : FS.isLink(stream.mode)
+            ? 7
+            : 4;
     }
     HEAP8[pbuf >> 0] = type;
     HEAP16[(pbuf + 2) >> 1] = flags;
-    (tempI64 = [
+    ((tempI64 = [
       rightsBase >>> 0,
       ((tempDouble = rightsBase),
       +Math.abs(tempDouble) >= 1.0
@@ -10528,8 +10523,8 @@ function _fd_fdstat_get(fd, pbuf) {
         : 0)
     ]),
       (HEAP32[(pbuf + 8) >> 2] = tempI64[0]),
-      (HEAP32[(pbuf + 12) >> 2] = tempI64[1]);
-    (tempI64 = [
+      (HEAP32[(pbuf + 12) >> 2] = tempI64[1]));
+    ((tempI64 = [
       rightsInheriting >>> 0,
       ((tempDouble = rightsInheriting),
       +Math.abs(tempDouble) >= 1.0
@@ -10541,7 +10536,7 @@ function _fd_fdstat_get(fd, pbuf) {
         : 0)
     ]),
       (HEAP32[(pbuf + 16) >> 2] = tempI64[0]),
-      (HEAP32[(pbuf + 20) >> 2] = tempI64[1]);
+      (HEAP32[(pbuf + 20) >> 2] = tempI64[1]));
     return 0;
   } catch (e) {
     if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
@@ -10586,7 +10581,7 @@ function _fd_seek(fd, offset_low, offset_high, whence, newOffset) {
     if (isNaN(offset)) return 61;
     var stream = SYSCALLS.getStreamFromFD(fd);
     FS.llseek(stream, offset, whence);
-    (tempI64 = [
+    ((tempI64 = [
       stream.position >>> 0,
       ((tempDouble = stream.position),
       +Math.abs(tempDouble) >= 1.0
@@ -10598,7 +10593,7 @@ function _fd_seek(fd, offset_low, offset_high, whence, newOffset) {
         : 0)
     ]),
       (HEAP32[newOffset >> 2] = tempI64[0]),
-      (HEAP32[(newOffset + 4) >> 2] = tempI64[1]);
+      (HEAP32[(newOffset + 4) >> 2] = tempI64[1]));
     if (stream.getdents && offset === 0 && whence === 0) stream.getdents = null; // reset readdir state
     return 0;
   } catch (e) {

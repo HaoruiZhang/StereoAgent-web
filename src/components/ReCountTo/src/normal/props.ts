@@ -3,7 +3,7 @@ import propTypes from "@/utils/propTypes";
 
 export const countToProps = {
   startVal: propTypes.number.def(0),
-  endVal: propTypes.number.def(2020),
+  endVal: propTypes.number.def(2025),
   duration: propTypes.number.def(1300),
   autoplay: propTypes.bool.def(true),
   decimals: {

@@ -223,7 +223,7 @@ docker run -dp 8080:80  --name pure-admin vue-pure-admin
 
 完全免费开源
 
-[MIT © 2020-present, pure-admin](./LICENSE)
+[MIT © 2025-present, pure-admin](./LICENSE)
 
 ## `Star`
 

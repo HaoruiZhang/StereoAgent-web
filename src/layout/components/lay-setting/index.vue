@@ -441,8 +441,11 @@ onUnmounted(() => removeMatchMedia);
         </button>
       </span>
 
-      <p :class="['mt-4!', pClass]">{{ t("panel.pureTagsStyle") }}</p>
+      <p v-if="ifDevMode" :class="['mt-4!', pClass]">
+        {{ t("panel.pureTagsStyle") }}
+      </p>
       <Segmented
+        v-if="ifDevMode"
         resize
         class="select-none"
         :modelValue="markValue === 'smart' ? 0 : markValue === 'card' ? 1 : 2"

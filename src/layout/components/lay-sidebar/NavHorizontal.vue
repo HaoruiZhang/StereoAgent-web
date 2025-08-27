@@ -126,7 +126,7 @@ onMounted(() => {
           <p v-if="username" class="dark:text-white">{{ username }}</p>
         </span>
         <template #dropdown>
-          <el-dropdown-item @click="toAccountSettings">
+          <el-dropdown-item v-if="ifDevMode" @click="toAccountSettings">
             <IconifyIconOffline
               :icon="AccountSettingsIcon"
               style="margin: 5px"
